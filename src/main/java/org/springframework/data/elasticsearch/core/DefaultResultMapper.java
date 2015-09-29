@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.ScriptedField;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
-import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentProperty;
 import org.springframework.data.mapping.PersistentProperty;
@@ -52,6 +50,7 @@ import org.springframework.data.mapping.context.MappingContext;
 /**
  * @author Artur Konczak
  * @author Petar Tahchiev
+ * @author Sascha Woo
  */
 public class DefaultResultMapper extends AbstractResultMapper {
 
@@ -80,7 +79,7 @@ public class DefaultResultMapper extends AbstractResultMapper {
 	}
 
 	@Override
-	public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
+	public <T> ScrollPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
 		long totalHits = response.getHits().totalHits();
 		List<T> results = new ArrayList<T>();
 		for (SearchHit hit : response.getHits()) {
@@ -97,7 +96,7 @@ public class DefaultResultMapper extends AbstractResultMapper {
 			}
 		}
 
-		return new AggregatedPageImpl<T>(results, pageable, totalHits, response.getAggregations());
+		return new ScrollPageImpl<T>(results, pageable, totalHits, response.getAggregations(), response.getScrollId());
 	}
 
 	private <T> void populateScriptFields(T result, SearchHit hit) {
