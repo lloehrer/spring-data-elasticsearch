@@ -1172,7 +1172,7 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Applicati
 		return values.toArray(valuesAsArray);
 	}
 
-	protected ResultsMapper getResultsMapper() {
+	public ResultsMapper getResultsMapper() {
 		return resultsMapper;
 	}
 

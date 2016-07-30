@@ -23,7 +23,7 @@ package org.springframework.data.elasticsearch.core;
  * @author Artur Konczak
  */
 
-public interface ResultsMapper extends SearchResultMapper, GetResultMapper, MultiGetResultMapper {
+public interface ResultsMapper extends SearchResultMapper, GetResultMapper, MultiGetResultMapper, SearchHitMapper {
 
 	EntityMapper getEntityMapper();
 }

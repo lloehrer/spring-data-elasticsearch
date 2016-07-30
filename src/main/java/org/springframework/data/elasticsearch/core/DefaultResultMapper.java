@@ -191,4 +191,18 @@ public class DefaultResultMapper extends AbstractResultMapper {
 			}
 		}
 	}
+
+	@Override
+	public <T> T mapSearchHit(SearchHit hit, Class<T> clazz) {
+		T result = null;
+		if (StringUtils.isNotBlank(hit.sourceAsString())) {
+			result = mapEntity(hit.sourceAsString(), clazz);
+		} else {
+			result = mapEntity(hit.getFields().values(), clazz);
+		}
+		setPersistentEntityId(result, hit.getId(), clazz);
+		populateScriptFields(result, hit);
+		return result;
+	}
+	
 }
